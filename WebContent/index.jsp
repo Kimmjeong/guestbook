@@ -27,18 +27,21 @@
 	</table>
 	</form>
 <%
+	int countTotal=list.size();
+	int index=0;
 	for(GuestBookVo vo:list){
 %>
 	<br>
 	<table width=510 border=1>
 		<tr>
-			<td>[<%=vo.getNo() %>]</td>
+			<td>[<%=countTotal-index++ %>]</td>
 			<td><%=vo.getName() %></td>
 			<td><%=vo.getReg_date() %></td>
 			<td><a href="deleteform.jsp?no=<%=vo.getNo()%>">삭제</a></td>
 		</tr>
 		<tr>
-			<td colspan=4><%=vo.getMessage() %></td>
+			<%-- 텍스트박스 개행 처리 --%>
+			<td colspan=4><%=vo.getMessage().replaceAll("\n","<br>") %></td>
 		</tr>
 	</table>
 <%

@@ -12,6 +12,27 @@ import java.util.List;
 import com.hanains.guestbook.vo.GuestBookVo;
 
 public class GuestBookDao {
+	
+	private Connection getConnection() throws SQLException{
+		
+		Connection connection=null;
+		
+		try{
+		// 드라이버 로딩
+		Class.forName("oracle.jdbc.driver.OracleDriver");
+		
+		// 연결하기(Oracle DB)
+		
+		String dbUrl="jdbc:oracle:thin:@localhost:1522:xe";
+		connection=DriverManager.getConnection(dbUrl, "webdb","webdb");
+		
+		} catch (ClassNotFoundException e) {
+			System.out.println("드라이버 로딩 실패 - "+e);
+		} 
+		
+		return connection;
+		
+	}
 
 	// 방명록 리스트 출력
 	public List<GuestBookVo> getList(){
@@ -23,12 +44,8 @@ public class GuestBookDao {
 		ResultSet rs=null;
 		
 		try {
-			// 1. 드라이버 로딩(클래스 동적 로딩)
-			Class.forName("oracle.jdbc.driver.OracleDriver");
 			
-			// 2. db 연결
-			String dbUrl="jdbc:oracle:thin:@localhost:1522:xe";
-			connection=DriverManager.getConnection(dbUrl, "webdb","webdb");
+			connection=getConnection();
 			
 			stmt=connection.createStatement();
 			
@@ -53,8 +70,6 @@ public class GuestBookDao {
 				list.add(vo);
 			}
 		
-		} catch (ClassNotFoundException e) {
-			System.out.println("드라이버 로딩 실패 - "+e);
 		} catch (SQLException e) {
 			System.out.println("에러 - "+e);
 		} finally {
@@ -80,11 +95,7 @@ public class GuestBookDao {
 
 		try {
 			
-			// 1. 드라이버 로딩(클래스 동적 로딩)
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-			// 2. db 연결
-			String dbUrl = "jdbc:oracle:thin:@localhost:1522:xe";
-			connection = DriverManager.getConnection(dbUrl, "webdb", "webdb");
+			connection=getConnection();
 			
 			String sql="insert into guestbook values(guestbook_seq.nextval,?,?,?, SYSDATE)";
 			pstmt=connection.prepareStatement(sql);
@@ -95,8 +106,6 @@ public class GuestBookDao {
 			
 			pstmt.executeUpdate();
 			
-		} catch (ClassNotFoundException e) {
-			System.out.println("드라이버 로딩 실패 - "+e);
 		} catch (SQLException e) {
 			System.out.println("에러 - "+e);
 		} finally {
@@ -120,11 +129,7 @@ public class GuestBookDao {
 
 		try {
 			
-			// 1. 드라이버 로딩(클래스 동적 로딩)
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-			// 2. db 연결
-			String dbUrl = "jdbc:oracle:thin:@localhost:1522:xe";
-			connection = DriverManager.getConnection(dbUrl, "webdb", "webdb");
+			connection=getConnection();
 			
 			String sql="delete from guestbook where no=? and password=?";
 			pstmt=connection.prepareStatement(sql);
@@ -134,9 +139,7 @@ public class GuestBookDao {
 			
 			pstmt.executeUpdate();
 			
-		} catch (ClassNotFoundException e) {
-			System.out.println("드라이버 로딩 실패 - "+e);
-		} catch (SQLException e) {
+		}  catch (SQLException e) {
 			System.out.println("에러 - "+e);
 		} finally {
 			try {
@@ -160,11 +163,7 @@ public class GuestBookDao {
 		
 		try {
 			
-			// 1. 드라이버 로딩(클래스 동적 로딩)
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-			// 2. db 연결
-			String dbUrl = "jdbc:oracle:thin:@localhost:1522:xe";
-			connection = DriverManager.getConnection(dbUrl, "webdb", "webdb");
+			connection=getConnection();
 			
 			String sql="select password from guestbook where no="+no;
 			
@@ -174,8 +173,6 @@ public class GuestBookDao {
 			if(rs.next()) return rs.getString(1);
 			
 			
-		} catch (ClassNotFoundException e) {
-			System.out.println("드라이버 로딩 실패 - "+e);
 		} catch (SQLException e) {
 			System.out.println("에러 - "+e);
 		} finally {
